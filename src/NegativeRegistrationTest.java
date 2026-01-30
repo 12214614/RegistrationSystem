@@ -4,22 +4,23 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.time.Duration;
 
 public class NegativeRegistrationTest {
 
     public static void main(String[] args) throws Exception {
 
-        // Selenium Manager will handle ChromeDriver automatically
         WebDriver driver = new ChromeDriver();
         driver.manage().window().maximize();
 
         driver.get("http://127.0.0.1:5500/registration.html");
 
-        Thread.sleep(2000);
-
+        // Fill form WITHOUT last name (negative test)
         driver.findElement(By.id("firstName")).sendKeys("John");
         driver.findElement(By.id("email")).sendKeys("john@test.com");
         driver.findElement(By.id("phone")).sendKeys("+919876543210");
@@ -30,18 +31,21 @@ public class NegativeRegistrationTest {
 
         driver.findElement(By.id("submitBtn")).click();
 
-        Thread.sleep(2000);
+        // Wait for error message
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        WebElement error = wait.until(
+                ExpectedConditions.visibilityOfElementLocated(By.id("lastNameError"))
+        );
 
-        WebElement error = driver.findElement(By.id("lastNameError"));
         if (error.isDisplayed()) {
             System.out.println("Negative test PASSED");
+            takeScreenshot(driver, "missing-lastname-error.png");
         }
-
-        takeScreenshot(driver, "error-state.png");
 
         driver.quit();
     }
 
+    // Reusable screenshot utility
     static void takeScreenshot(WebDriver driver, String fileName) throws Exception {
         File src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
         Files.copy(src.toPath(), new File(fileName).toPath());
