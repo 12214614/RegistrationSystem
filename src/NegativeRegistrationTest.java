@@ -15,16 +15,31 @@ public class NegativeRegistrationTest {
         driver.manage().window().maximize();
 
         driver.get("http://127.0.0.1:5500/registration.html");
+        Thread.sleep(2000); // page load pause
 
         driver.findElement(By.id("firstName")).sendKeys("John");
+        Thread.sleep(1000);
+
         driver.findElement(By.id("email")).sendKeys("john@test.com");
+        Thread.sleep(1000);
+
         driver.findElement(By.id("phone")).sendKeys("+919876543210");
+        Thread.sleep(1000);
+
         driver.findElement(By.xpath("//input[@value='Male']")).click();
+        Thread.sleep(1000);
+
         driver.findElement(By.id("password")).sendKeys("Test@123");
+        Thread.sleep(1000);
+
         driver.findElement(By.id("confirmPassword")).sendKeys("Test@123");
+        Thread.sleep(1000);
+
         driver.findElement(By.id("terms")).click();
+        Thread.sleep(1500);
 
         driver.findElement(By.id("submitBtn")).click();
+        Thread.sleep(2000); // wait to see error
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
         WebElement error = wait.until(
@@ -36,6 +51,7 @@ public class NegativeRegistrationTest {
             ScreenshotUtil.takeScreenshot(driver, "missing-lastname-error");
         }
 
+        Thread.sleep(3000); // pause before closing browser
         driver.quit();
     }
 }
