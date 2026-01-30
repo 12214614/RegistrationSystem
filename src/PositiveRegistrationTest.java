@@ -1,9 +1,6 @@
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.time.Duration;
 
 public class PositiveRegistrationTest {
@@ -16,7 +13,6 @@ public class PositiveRegistrationTest {
 
         driver.get("http://127.0.0.1:5500/registration.html");
 
-        // Fill valid data
         driver.findElement(By.id("firstName")).sendKeys("Eshwar");
         driver.findElement(By.id("lastName")).sendKeys("Teja");
         driver.findElement(By.id("email")).sendKeys("eshwar@gmail.com");
@@ -35,21 +31,11 @@ public class PositiveRegistrationTest {
 
         if (successText.contains("Registration Successful")) {
             System.out.println("Positive test PASSED");
-            takeScreenshot(driver, "success-state.png");
+            ScreenshotUtil.takeScreenshot(driver, "success-state");
         } else {
             System.out.println("Positive test FAILED");
         }
 
         driver.quit();
-    }
-
-    // Reusable screenshot utility (FIXED)
-    static void takeScreenshot(WebDriver driver, String fileName) throws Exception {
-        File src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-        Files.copy(
-                src.toPath(),
-                new File(fileName).toPath(),
-                StandardCopyOption.REPLACE_EXISTING
-        );
     }
 }
